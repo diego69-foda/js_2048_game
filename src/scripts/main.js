@@ -253,11 +253,12 @@ const game = new Game();
 // Elementos da interface
 const gameField = document.querySelector('.game-field');
 const gameScore = document.querySelector('.game-score');
-const startButton = document.querySelector('.button.start');
+const startButton = document.getElementById('main-button');
 const messageStart = document.querySelector('.message-start');
 const messageWin = document.querySelector('.message-win');
 const messageLose = document.querySelector('.message-lose');
-const restartButtons = document.querySelectorAll('.button.restart');
+const restartLoseButton = document.getElementById('restart-lose');
+const restartWinButton = document.getElementById('restart-win');
 
 // Função para atualizar a interface do jogo
 function updateGameInterface() {
@@ -412,9 +413,8 @@ document.addEventListener('keydown', handleKeydown);
 startButton.addEventListener('click', handleButtonClick);
 
 // Adiciona event listeners para os botões de restart
-restartButtons.forEach((button) => {
-  button.addEventListener('click', handleButtonClick);
-});
+restartLoseButton.addEventListener('click', handleButtonClick);
+restartWinButton.addEventListener('click', handleButtonClick);
 
 // Suporte para dispositivos móveis
 gameField.addEventListener('touchstart', handleTouchStart, { passive: true });
