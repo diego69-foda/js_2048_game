@@ -1,69 +1,64 @@
-# Jogo 2048
+# 2048 game
 
-Um jogo 2048 implementado em HTML, CSS e JavaScript puro.
+Hey! Are you ready for a real hard check of your JavaScript skills, ninja?
+If you are still here, let's do it.
 
-## Como Jogar
+In this task, you need to implement the 2048 game like in [this reference](https://play2048.co/)
+Don't play for too long! We need you to write the code!
 
-1. **Objetivo**: Combine números iguais para chegar ao número 2048!
-2. **Controles**:
-   - **Teclado**: Use as setas (↑ ↓ ← →) para mover as peças
-   - **Mobile**: Deslize o dedo na direção desejada
-3. **Regras**:
-   - Cada movimento move todas as peças na direção escolhida
-   - Peças iguais se combinam quando se tocam
-   - Após cada movimento válido, uma nova peça (2 ou 4) aparece
-   - O jogo termina quando não há mais movimentos possíveis
+Okay, what do we have?
+1) HTML and CSS are already written. You can use it, or implement your own design if you want.
+2) Base `Game` class structure is already written too. Extend it with your own methods. Obligatory methods (used in tests):
+  - constructor with `initialState` parameter (value is optional, defaults to the empty board)
+  - `getState()`
+  - `getScore()`
+  - `getStatus()`
+  - `moveLeft()`
+  - `moveRight()`
+  - `moveUp()`
+  - `moveDown()`
+  - `start()`
+  - `restart()`
 
-## Como Executar
+3) Reference.
 
-1. Abra o arquivo `src/index.html` em qualquer navegador moderno
-2. Clique em "Start" para começar o jogo
-3. Use as setas do teclado para jogar
+That's it!
 
-## Funcionalidades
+Okay, okay. Also, we have some rules:
+1) The game field is 4 x 4
+2) Each cell can be empty or contain one of the numbers: 2, 4, 8 ... 2^n
+3) The player can move cells with keyboard arrows
+4) All the numbers should be moved in the selected direction until all empty cells are filled in
+   - 2 equal cells should be merged into a doubled number
+   - The merged cell can’t be merged twice during one move
+5) The move is possible if at least one cell is changed after the move
+6) After move 2 or 4 appears in a random empty cell. 4 probability is 10%
+7) When 2048 value is displayed in any cell, win message should be shown.
+8) The `game over` message should be shown if there are no more available moves.
+9) Hide start message when game starts.
+10) Change the `Start` button to `Restart` after the first move.
+11) `Restart` button should reset the game to the initial state.
+12) Increase score with each move. The score should be increased by the sum of all merged cells.
+13) The game consists of 2 main parts:
+  - game logic written in `src/modules/Game.class.js` module that exports `Game` class
+  - game UI written in `src/index.html` with `main.js` script that need to use `Game` class instance
 
-- ✅ Interface responsiva e moderna
-- ✅ Suporte para teclado e touch (mobile)
-- ✅ Sistema de pontuação
-- ✅ Detecção de vitória (2048) e derrota
-- ✅ Botão de restart
-- ✅ Animações suaves
-- ✅ Design fiel ao jogo original
-
-## Estrutura do Projeto
-
-```
-src/
-├── index.html          # Arquivo principal HTML
-├── styles/
-│   ├── main.css        # Estilos do jogo
-│   └── main.scss       # Versão SCSS (original)
-├── scripts/
-│   └── main.js         # Lógica do jogo
-└── modules/
-    └── Game.class.js   # Classe Game (para testes)
-```
-
-## Tecnologias Utilizadas
-
-- **HTML5**: Estrutura da página
-- **CSS3**: Estilização e layout responsivo
-- **JavaScript ES6+**: Lógica do jogo e interações
-- **SCSS**: Pré-processador CSS (opcional)
-
-## Desenvolvimento
-
-Para modificar o jogo:
-
-1. **Lógica do jogo**: Edite `scripts/main.js`
-2. **Estilos**: Edite `styles/main.css` ou `styles/main.scss`
-3. **Estrutura**: Edite `index.html`
-
-## Testes
-
-O projeto inclui uma estrutura para testes unitários. A classe `Game` pode ser testada independentemente da interface.
-
-## Licença
-
-Este projeto é de código aberto e pode ser usado livremente para fins educacionais e pessoais.
-
+Hints:
+- You have class `field-cell--%cell_value%`, for styling cell in the game.
+- Use `hidden` class for hiding elements on page.
+- Use `start`, `restart` classes for the main button for different styles.
+- Use `field-cell--%cell_value%` class like additional class, don't replace the main class.
+- Use `keydown` event and `event.key` property to handle arrow buttons presses
+    ```js
+    document.addEventListener('keydown', event => console.log(event.key));
+    ```
+- Adding animation to the game is optional. It is a bit tricky, but you can try it if you want. Probably, you will need to extend the Game class with additional methods and create a separate board storage with Tile entities to operate their corresponding DOM elements' positions.
+You can change the HTML/CSS layout if you need it.
+![Preview](./src/images/reference.png)
+## Deploy and Pull Request
+1. Replace `<your_account>` with your Github username in the link
+    - [DEMO LINK](https://<your_account>.github.io/js_2048_game/)
+2. Follow [this instructions](https://mate-academy.github.io/layout_task-guideline/)
+    - Run `npm run test` command to test your code;
+    - Run `npm run test:only -- -n` to run fast test ignoring linter;
+    - Run `npm run test:only -- -l` to run fast test with additional info in console ignoring linter.
