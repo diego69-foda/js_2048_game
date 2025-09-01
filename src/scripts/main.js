@@ -7,7 +7,7 @@ class Game {
       [0, 0, 0, 0],
       [0, 0, 0, 0],
       [0, 0, 0, 0],
-      [0, 0, 0, 0]
+      [0, 0, 0, 0],
     ];
     this.score = 0;
     this.status = 'idle'; // 'idle', 'playing', 'win', 'lose'
@@ -16,7 +16,7 @@ class Game {
 
   generateRandomTile() {
     const emptyCells = [];
-    
+
     for (let i = 0; i < this.size; i++) {
       for (let j = 0; j < this.size; j++) {
         if (this.board[i][j] === 0) {
@@ -24,112 +24,129 @@ class Game {
         }
       }
     }
-    
+
     if (emptyCells.length > 0) {
-      const randomCell = emptyCells[Math.floor(Math.random() * emptyCells.length)];
-      const value = Math.random() < 0.9 ? 2 : 4; // 90% chance de 2, 10% chance de 4
+      const randomCell =
+        emptyCells[Math.floor(Math.random() * emptyCells.length)];
+      const value = Math.random() < 0.9 ? 2 : 4;
+
       this.board[randomCell.row][randomCell.col] = value;
     }
   }
 
   moveLeft() {
-    if (this.status !== 'playing') return false;
-    
+    if (this.status !== 'playing') {
+      return false;
+    }
+
     const originalBoard = JSON.stringify(this.board);
-    
+
     for (let i = 0; i < this.size; i++) {
       this.board[i] = this.mergeLine(this.board[i]);
     }
-    
+
     const changed = JSON.stringify(this.board) !== originalBoard;
+
     if (changed) {
       this.generateRandomTile();
       this.checkGameStatus();
     }
-    
+
     return changed;
   }
 
   moveRight() {
-    if (this.status !== 'playing') return false;
-    
+    if (this.status !== 'playing') {
+      return false;
+    }
+
     const originalBoard = JSON.stringify(this.board);
-    
+
     for (let i = 0; i < this.size; i++) {
       const reversed = this.board[i].reverse();
       const merged = this.mergeLine(reversed);
+
       this.board[i] = merged.reverse();
     }
-    
+
     const changed = JSON.stringify(this.board) !== originalBoard;
+
     if (changed) {
       this.generateRandomTile();
       this.checkGameStatus();
     }
-    
+
     return changed;
   }
 
   moveUp() {
-    if (this.status !== 'playing') return false;
-    
+    if (this.status !== 'playing') {
+      return false;
+    }
+
     const originalBoard = JSON.stringify(this.board);
-    
+
     for (let j = 0; j < this.size; j++) {
       const column = [];
+
       for (let i = 0; i < this.size; i++) {
         column.push(this.board[i][j]);
       }
-      
+
       const merged = this.mergeLine(column);
-      
+
       for (let i = 0; i < this.size; i++) {
         this.board[i][j] = merged[i];
       }
     }
-    
+
     const changed = JSON.stringify(this.board) !== originalBoard;
+
     if (changed) {
       this.generateRandomTile();
       this.checkGameStatus();
     }
-    
+
     return changed;
   }
 
   moveDown() {
-    if (this.status !== 'playing') return false;
-    
+    if (this.status !== 'playing') {
+      return false;
+    }
+
     const originalBoard = JSON.stringify(this.board);
-    
+
     for (let j = 0; j < this.size; j++) {
       const column = [];
+
       for (let i = 0; i < this.size; i++) {
         column.push(this.board[i][j]);
       }
-      
+
       const reversed = column.reverse();
       const merged = this.mergeLine(reversed);
       const finalColumn = merged.reverse();
-      
+
       for (let i = 0; i < this.size; i++) {
         this.board[i][j] = finalColumn[i];
       }
     }
-    
+
     const changed = JSON.stringify(this.board) !== originalBoard;
+
     if (changed) {
       this.generateRandomTile();
       this.checkGameStatus();
     }
-    
+
     return changed;
   }
 
   mergeLine(line) {
     // Remove zeros
-    const filtered = line.filter(cell => cell !== 0);
-    
+    const filtered = line.filter((cell) => cell !== 0);
+
     // Mescla números iguais adjacentes
     for (let i = 0; i < filtered.length - 1; i++) {
       if (filtered[i] === filtered[i + 1]) {
@@ -138,12 +155,12 @@ class Game {
         filtered.splice(i + 1, 1);
       }
     }
-    
+
     // Adiciona zeros no final
     while (filtered.length < this.size) {
       filtered.push(0);
     }
-    
+
     return filtered;
   }
 
@@ -151,31 +168,41 @@ class Game {
     // Verifica se há células vazias
     for (let i = 0; i < this.size; i++) {
       for (let j = 0; j < this.size; j++) {
-        if (this.board[i][j] === 0) return true;
+        if (this.board[i][j] === 0) {
+          return true;
+        }
       }
     }
-    
+
     // Verifica se há possibilidade de mesclar
     for (let i = 0; i < this.size; i++) {
       for (let j = 0; j < this.size; j++) {
         const current = this.board[i][j];
-        
+
         // Verifica direita
-        if (j < this.size - 1 && this.board[i][j + 1] === current) return true;
+        if (j < this.size - 1 && this.board[i][j + 1] === current) {
+          return true;
+        }
+
         // Verifica baixo
-        if (i < this.size - 1 && this.board[i + 1][j] === current) return true;
+        if (i < this.size - 1 && this.board[i + 1][j] === current) {
+          return true;
+        }
       }
     }
-    
+
     return false;
   }
 
   hasWon() {
     for (let i = 0; i < this.size; i++) {
       for (let j = 0; j < this.size; j++) {
-        if (this.board[i][j] === 2048) return true;
+        if (this.board[i][j] === 2048) {
+          return true;
+        }
       }
     }
+
     return false;
   }
 
@@ -192,7 +219,7 @@ class Game {
   }
 
   getState() {
-    return this.board.map(row => [...row]);
+    return this.board.map((row) => [...row]);
   }
 
   getStatus() {
@@ -202,13 +229,14 @@ class Game {
   start() {
     this.status = 'playing';
     this.score = 0;
+
     this.board = [
       [0, 0, 0, 0],
       [0, 0, 0, 0],
       [0, 0, 0, 0],
-      [0, 0, 0, 0]
+      [0, 0, 0, 0],
     ];
-    
+
     // Gera duas peças iniciais
     this.generateRandomTile();
     this.generateRandomTile();
@@ -226,7 +254,6 @@ const game = new Game();
 const gameField = document.querySelector('.game-field');
 const gameScore = document.querySelector('.game-score');
 const startButton = document.querySelector('.button.start');
-const messageContainer = document.querySelector('.message-container');
 const messageStart = document.querySelector('.message-start');
 const messageWin = document.querySelector('.message-win');
 const messageLose = document.querySelector('.message-lose');
@@ -235,21 +262,22 @@ const messageLose = document.querySelector('.message-lose');
 function updateGameInterface() {
   const state = game.getState();
   const score = game.getScore();
-  const status = game.getStatus();
-  
+  const gameStatus = game.getStatus();
+
   // Atualiza o score
   gameScore.textContent = score;
-  
+
   // Atualiza o tabuleiro
   const cells = gameField.querySelectorAll('.field-cell');
+
   cells.forEach((cell, index) => {
     const row = Math.floor(index / 4);
     const col = index % 4;
     const value = state[row][col];
-    
+
     // Remove todas as classes de valor
     cell.className = 'field-cell';
-    
+
     if (value !== 0) {
       cell.textContent = value;
       cell.classList.add(`field-cell--${value}`);
@@ -257,13 +285,13 @@ function updateGameInterface() {
       cell.textContent = '';
     }
   });
-  
+
   // Atualiza as mensagens baseado no status
   messageStart.classList.add('hidden');
   messageWin.classList.add('hidden');
   messageLose.classList.add('hidden');
-  
-  switch (status) {
+
+  switch (gameStatus) {
     case 'idle':
       messageStart.classList.remove('hidden');
       break;
@@ -274,7 +302,7 @@ function updateGameInterface() {
       messageLose.classList.remove('hidden');
       break;
   }
-  
+
   // Atualiza o botão
   if (status === 'playing') {
     startButton.textContent = 'Restart';
@@ -288,12 +316,14 @@ function updateGameInterface() {
 }
 
 // Função para lidar com movimentos do teclado
-function handleKeydown(event) {
-  if (game.getStatus() !== 'playing') return;
-  
+function handleKeydown(evt) {
+  if (game.getStatus() !== 'playing') {
+    return;
+  }
+
   let moved = false;
-  
-  switch (event.key) {
+
+  switch (evt.key) {
     case 'ArrowLeft':
       moved = game.moveLeft();
       break;
@@ -309,7 +339,7 @@ function handleKeydown(event) {
     default:
       return;
   }
-  
+
   if (moved) {
     updateGameInterface();
   }
@@ -317,14 +347,14 @@ function handleKeydown(event) {
 
 // Função para lidar com cliques no botão
 function handleButtonClick() {
-  const status = game.getStatus();
-  
-  if (status === 'idle' || status === 'win' || status === 'lose') {
+  const gameStatus = game.getStatus();
+
+  if (gameStatus === 'idle' || gameStatus === 'win' || gameStatus === 'lose') {
     game.start();
   } else {
     game.restart();
   }
-  
+
   updateGameInterface();
 }
 
@@ -332,23 +362,25 @@ function handleButtonClick() {
 let touchStartX = 0;
 let touchStartY = 0;
 
-function handleTouchStart(event) {
-  touchStartX = event.touches[0].clientX;
-  touchStartY = event.touches[0].clientY;
+function handleTouchStart(evt) {
+  touchStartX = evt.touches[0].clientX;
+  touchStartY = evt.touches[0].clientY;
 }
 
-function handleTouchEnd(event) {
-  if (game.getStatus() !== 'playing') return;
-  
-  const touchEndX = event.changedTouches[0].clientX;
-  const touchEndY = event.changedTouches[0].clientY;
-  
+function handleTouchEnd(evt) {
+  if (game.getStatus() !== 'playing') {
+    return;
+  }
+
+  const touchEndX = evt.changedTouches[0].clientX;
+  const touchEndY = evt.changedTouches[0].clientY;
+
   const deltaX = touchEndX - touchStartX;
   const deltaY = touchEndY - touchStartY;
-  
+
   const minSwipeDistance = 30;
   let moved = false;
-  
+
   if (Math.abs(deltaX) > Math.abs(deltaY)) {
     // Movimento horizontal
     if (Math.abs(deltaX) > minSwipeDistance) {
@@ -368,7 +400,7 @@ function handleTouchEnd(event) {
       }
     }
   }
-  
+
   if (moved) {
     updateGameInterface();
   }
@@ -386,6 +418,10 @@ gameField.addEventListener('touchend', handleTouchEnd, { passive: true });
 updateGameInterface();
 
 // Previne o comportamento padrão de scroll em dispositivos móveis
-gameField.addEventListener('touchmove', (event) => {
-  event.preventDefault();
-}, { passive: false });
+gameField.addEventListener(
+  'touchmove',
+  (evt) => {
+    evt.preventDefault();
+  },
+  { passive: false },
+);

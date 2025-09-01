@@ -25,7 +25,7 @@ class Game {
       [0, 0, 0, 0],
       [0, 0, 0, 0],
       [0, 0, 0, 0],
-      [0, 0, 0, 0]
+      [0, 0, 0, 0],
     ];
     this.score = 0;
     this.status = 'idle'; // 'idle', 'playing', 'win', 'lose'
@@ -37,7 +37,7 @@ class Game {
    */
   generateRandomTile() {
     const emptyCells = [];
-    
+
     for (let i = 0; i < this.size; i++) {
       for (let j = 0; j < this.size; j++) {
         if (this.board[i][j] === 0) {
@@ -45,10 +45,12 @@ class Game {
         }
       }
     }
-    
+
     if (emptyCells.length > 0) {
-      const randomCell = emptyCells[Math.floor(Math.random() * emptyCells.length)];
-      const value = Math.random() < 0.9 ? 2 : 4; // 90% chance de 2, 10% chance de 4
+      const randomCell =
+        emptyCells[Math.floor(Math.random() * emptyCells.length)];
+      const value = Math.random() < 0.9 ? 2 : 4;
+
       this.board[randomCell.row][randomCell.col] = value;
     }
   }
@@ -57,20 +59,23 @@ class Game {
    * Move as peças para a esquerda
    */
   moveLeft() {
-    if (this.status !== 'playing') return false;
-    
+    if (this.status !== 'playing') {
+      return false;
+    }
+
     const originalBoard = JSON.stringify(this.board);
-    
+
     for (let i = 0; i < this.size; i++) {
       this.board[i] = this.mergeLine(this.board[i]);
     }
-    
+
     const changed = JSON.stringify(this.board) !== originalBoard;
+
     if (changed) {
       this.generateRandomTile();
       this.checkGameStatus();
     }
-    
+
     return changed;
   }
 
@@ -78,22 +83,26 @@ class Game {
    * Move as peças para a direita
    */
   moveRight() {
-    if (this.status !== 'playing') return false;
-    
+    if (this.status !== 'playing') {
+      return false;
+    }
+
     const originalBoard = JSON.stringify(this.board);
-    
+
     for (let i = 0; i < this.size; i++) {
       const reversed = this.board[i].reverse();
       const merged = this.mergeLine(reversed);
+
       this.board[i] = merged.reverse();
     }
-    
+
     const changed = JSON.stringify(this.board) !== originalBoard;
+
     if (changed) {
       this.generateRandomTile();
       this.checkGameStatus();
     }
-    
+
     return changed;
   }
 
@@ -101,29 +110,33 @@ class Game {
    * Move as peças para cima
    */
   moveUp() {
-    if (this.status !== 'playing') return false;
-    
+    if (this.status !== 'playing') {
+      return false;
+    }
+
     const originalBoard = JSON.stringify(this.board);
-    
+
     for (let j = 0; j < this.size; j++) {
       const column = [];
+
       for (let i = 0; i < this.size; i++) {
         column.push(this.board[i][j]);
       }
-      
+
       const merged = this.mergeLine(column);
-      
+
       for (let i = 0; i < this.size; i++) {
         this.board[i][j] = merged[i];
       }
     }
-    
+
     const changed = JSON.stringify(this.board) !== originalBoard;
+
     if (changed) {
       this.generateRandomTile();
       this.checkGameStatus();
     }
-    
+
     return changed;
   }
 
@@ -131,31 +144,35 @@ class Game {
    * Move as peças para baixo
    */
   moveDown() {
-    if (this.status !== 'playing') return false;
-    
+    if (this.status !== 'playing') {
+      return false;
+    }
+
     const originalBoard = JSON.stringify(this.board);
-    
+
     for (let j = 0; j < this.size; j++) {
       const column = [];
+
       for (let i = 0; i < this.size; i++) {
         column.push(this.board[i][j]);
       }
-      
+
       const reversed = column.reverse();
       const merged = this.mergeLine(reversed);
       const finalColumn = merged.reverse();
-      
+
       for (let i = 0; i < this.size; i++) {
         this.board[i][j] = finalColumn[i];
       }
     }
-    
+
     const changed = JSON.stringify(this.board) !== originalBoard;
+
     if (changed) {
       this.generateRandomTile();
       this.checkGameStatus();
     }
-    
+
     return changed;
   }
 
@@ -164,8 +181,8 @@ class Game {
    */
   mergeLine(line) {
     // Remove zeros
-    const filtered = line.filter(cell => cell !== 0);
-    
+    const filtered = line.filter((cell) => cell !== 0);
+
     // Mescla números iguais adjacentes
     for (let i = 0; i < filtered.length - 1; i++) {
       if (filtered[i] === filtered[i + 1]) {
@@ -174,12 +191,12 @@ class Game {
         filtered.splice(i + 1, 1);
       }
     }
-    
+
     // Adiciona zeros no final
     while (filtered.length < this.size) {
       filtered.push(0);
     }
-    
+
     return filtered;
   }
 
@@ -190,22 +207,29 @@ class Game {
     // Verifica se há células vazias
     for (let i = 0; i < this.size; i++) {
       for (let j = 0; j < this.size; j++) {
-        if (this.board[i][j] === 0) return true;
+        if (this.board[i][j] === 0) {
+          return true;
+        }
       }
     }
-    
+
     // Verifica se há possibilidade de mesclar
     for (let i = 0; i < this.size; i++) {
       for (let j = 0; j < this.size; j++) {
         const current = this.board[i][j];
-        
+
         // Verifica direita
-        if (j < this.size - 1 && this.board[i][j + 1] === current) return true;
+        if (j < this.size - 1 && this.board[i][j + 1] === current) {
+          return true;
+        }
+
         // Verifica baixo
-        if (i < this.size - 1 && this.board[i + 1][j] === current) return true;
+        if (i < this.size - 1 && this.board[i + 1][j] === current) {
+          return true;
+        }
       }
     }
-    
+
     return false;
   }
 
@@ -215,9 +239,12 @@ class Game {
   hasWon() {
     for (let i = 0; i < this.size; i++) {
       for (let j = 0; j < this.size; j++) {
-        if (this.board[i][j] === 2048) return true;
+        if (this.board[i][j] === 2048) {
+          return true;
+        }
       }
     }
+
     return false;
   }
 
@@ -243,7 +270,7 @@ class Game {
    * @returns {number[][]}
    */
   getState() {
-    return this.board.map(row => [...row]);
+    return this.board.map((row) => [...row]);
   }
 
   /**
@@ -266,13 +293,14 @@ class Game {
   start() {
     this.status = 'playing';
     this.score = 0;
+
     this.board = [
       [0, 0, 0, 0],
       [0, 0, 0, 0],
       [0, 0, 0, 0],
-      [0, 0, 0, 0]
+      [0, 0, 0, 0],
     ];
-    
+
     // Gera duas peças iniciais
     this.generateRandomTile();
     this.generateRandomTile();
